@@ -47,6 +47,7 @@
 
         function findUserById(userId) {
             for (u in users){
+                //alert(u);
                 var user = users[u];
                 if(parseInt(user._id) === parseInt(userId)){
                     return user;

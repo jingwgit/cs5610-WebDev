@@ -1,0 +1,64 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid row">
+        <div class="navbar-text pull-left">
+            <a href="#!/user/{{model.userId}}/website/{{model.websiteId}}/page/{{model.pageId}}/widget"
+               class="wd-text-black wd-icon-padding">
+          <span class="glyphicon glyphicon-chevron-left">
+          </span>
+            </a>
+        </div>
+        <div class="navbar-text pull-right">
+            <a ng-click="model.createWidget()" class="wd-icon-padding wd-text-black">
+          <span class="glyphicon glyphicon-ok">
+          </span>
+            </a>
+        </div>
+        <a class="navbar-brand wd-text-white wd-text-bold">
+            New YouTube
+        </a>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div ng-show="model.error"
+         class="alert alert-danger"
+         role="alert">{{model.error}}
+    </div>
+
+    <label for="name">Name</label>
+    <input id="name"
+           ng-model="model.widgetName"
+           class="form-control"/>
+
+    <label for="text">Text</label>
+    <input id="text"
+           ng-model="model.widgetText"
+           class="form-control"/>
+
+    <label for="width">Width</label>
+    <input id="width"
+           ng-model="model.widgetWidth"
+           class="form-control"/>
+
+    <label for="url">URL</label>
+    <input id="url"
+           ng-model="model.widgetUrl"
+           class="form-control"/>
+
+    <a ng-click="model.createWidget()"
+       class="btn btn-success btn-block">
+        Create
+    </a>
+</div>
+
+<nav class="navbar navbar-default navbar-fixed-bottom">
+    <div class="container-fluid row">
+        <div class="pull-right navbar-text">
+
+            <a href="#!/user/{{model.userId}}" class="tv-icon-padding">
+                <span class="glyphicon glyphicon-user"></span>
+            </a>
+
+        </div>
+    </div>
+</nav>

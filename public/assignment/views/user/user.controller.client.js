@@ -25,11 +25,11 @@
 
         function register(username, password, vpassword) {
             if (username === undefined || username === null || username === "" || password === undefined || password === "") {
-                vm.error = "Username and Passwords cannot be empty.";
+                vm.error = "Username and passwords cannot be empty.";
                 return;
             }
             if (password !== vpassword) {
-                vm.error = "Password does not match.";
+                vm.error = "Passwords don't match.";
                 return;
             }
             var user = UserService.findUserByUsername(username);
@@ -53,25 +53,21 @@
 
     function ProfileController($routeParams, $location, $timeout, UserService) {
         var vm = this;
-        vm.user = UserService.findUserById($routeParams.uid);
-        vm.username = vm.user.username;
-        vm.firstName = vm.user.firstName;
-        vm.lastName = vm.user.lastName;
-        vm.email = vm.user.email;
+        vm.user = UserService.findUserById($routeParams.userId);
         vm.updateUser = updateUser;
 
         function updateUser() {
-            var update_user = {
-                _id: $routeParams.uid,
-                firstName: vm.firstName,
-                lastName: vm.lastName,
-                email: vm.email
+            var updatedUser = {
+                _id: $routeParams.userId,
+                firstName: vm.user.firstName,
+                lastName: vm.user.lastName,
+                email: vm.user.email
             };
-            UserService.updateUser($routeParams.uid, update_user);
-            vm.updated = "Profile changes saved!";
+            UserService.updateUser($routeParams.userId, updatedUser);
+            vm.updatedMessage = "Profile changes saved!";
 
             $timeout(function () {
-                vm.updated = null;
+                vm.updatedMessage = null;
             }, 5000);
         }
     }

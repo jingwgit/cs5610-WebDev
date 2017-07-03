@@ -1,32 +1,42 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="WebAppMaker">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Web App Maker</title>
+    <meta charset="UTF-8">
 
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel= "stylesheet">
+    <!--angular-->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-route.js"></script>
+    <!--<script src="vendor/angular/angular.min.js"></script>-->
+    <script src="vendor/angular/angular-route.min.js"></script>
 
+
+    <!--bootstrap-->
+    <!--<link href="vendor/bootstrap/bootstrap.min.css" rel="stylesheet"/>-->
+    <!--<link href="vendor/bootstrap/bootstrap-theme.css" rel="stylesheet"/>-->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel= "stylesheet">
+
+    <!--customized-->
     <link href="css/style.css" rel="stylesheet"/>
 
     <script src="app.js"></script>
     <script src="config.js"></script>
 
-    <!--Controllers-->
+    <!--controller-->
     <script src="views/user/user.controller.client.js"></script>
     <script src="views/website/website.controller.client.js"></script>
     <script src="views/page/page.controller.client.js"></script>
     <script src="views/widget/widget.controller.client.js"></script>
 
-    <!--Services-->
+    <!--service-->
     <script src="services/user.service.client.js"></script>
     <script src="services/website.service.client.js"></script>
     <script src="services/page.service.client.js"></script>
     <script src="services/widget.service.client.js"></script>
 
-    <title>Web App Maker</title>
 </head>
 <body>
+
 <div ng-view></div>
+
 </body>
 </html>

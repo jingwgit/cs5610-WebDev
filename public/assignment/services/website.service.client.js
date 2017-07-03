@@ -18,7 +18,7 @@
                 'findWebsitesByUser': findWebsitesByUser,
                 'findWebsiteById': findWebsiteById,
                 'updateWebsite': updateWebsite,
-                'deleteWebsite': deleteWebsite,
+                'deleteWebsiteById': deleteWebsiteById,
                 'deleteWebsitesByUser': deleteWebsitesByUser
             };
             return services;
@@ -75,7 +75,7 @@
             websites[index].description = website.description;
         }
 
-        function deleteWebsite(websiteId) {
+        function deleteWebsiteById(websiteId) {
             var oldWebsite = findWebsiteById(websiteId);
             var index = websites.indexOf(oldWebsite);
             websites.splice(index, 1);
@@ -85,7 +85,7 @@
             for (w in websites) {
                 website = websites[w];
                 if (website.developerId === userId) {
-                    deleteWebsite(website._id);
+                    deleteWebsiteById(website._id);
                 }
             }
         }

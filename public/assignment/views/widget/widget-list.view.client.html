@@ -2,133 +2,108 @@
     <div class="container-fluid row">
 
         <div class="navbar-text pull-left">
-            <a href="#!/user/{{model.uid}}/website/{{model.wid}}/page" class="cl-text-black cl-icon-padding">
+            <a href="#!/user/{{model.userId}}/website/{{model.websiteId}}/page" class="wd-text-black wd-icon-padding">
           <span class="glyphicon glyphicon-chevron-left">
           </span>
             </a>
         </div>
         <div class="navbar-text pull-right">
-            <a href="#!/user/{{model.uid}}/website/{{model.wid}}/page/{{model.pid}}/widget/new" class="cl-icon-padding cl-text-black">
+            <a href="#!/user/{{model.userId}}/website/{{model.websiteId}}/page/{{model.pageId}}/widget/new"
+               class="wd-icon-padding wd-text-black">
           <span class="glyphicon glyphicon-plus">
           </span>
             </a>
         </div>
-        <a class="navbar-brand cl-text-white cl-text-bold">
+        <a class="navbar-brand wd-text-white wd-text-bold">
             Widgets
         </a>
     </div>
 </nav>
 
-<div ng-repeat="widget in widgets">
-    <div ng-switch="widget.widgetType">
-        <div ng-switch-when="HEADING">
-            <ng-include src="'/views/widget/widget-heading.view.client.html'"/>
+
+<div class="container-fluid">
+
+    <div ng-repeat="widget in model.widgets" class="wd-widget">
+        <div class="wd-toolbar">
+            <a href="#!/user/{{model.userId}}/website/{{model.websiteId}}/page/{{model.pageId}}/widget/{{widget._id}}">
+                <span class="glyphicon glyphicon-cog"></span>
+            </a>
+            <span class="glyphicon glyphicon-align-justify"></span>
         </div>
-        <div ng-switch-when="IMAGE">
-            <ng-include src="'/views/widget/widget-image.view.client.html'"/>
-        </div>
-        <div ng-switch-when="YOUTUBE">
-            <ng-include src="'/views/widget/widget-youtube.view.client.html'"/>
-        </div>
+
+        <div ng-include="model.getWidgetUrlForType(widget.widgetType)"></div>
+        <!--user ng-switch-->
+        <!--<div ng-switch="widget.widgetType">-->
+            <!--<div ng-switch-when="HEADING">-->
+                <!--<div ng-include="'views/widget/widget-heading.view.client.html'"></div>-->
+            <!--</div>-->
+            <!--<div ng-switch-when="IMAGE">-->
+                <!--<div ng-include="'views/widget/widget-image.view.client.html'"></div>-->
+            <!--</div>-->
+            <!--<div ng-switch-when="YOUTUBE">-->
+                <!--<div ng-include="'views/widget/widget-youtube.view.client.html'"></div>-->
+            <!--</div>-->
+            <!--<div ng-switch-when="HTML"-->
+                 <!--ng-bind-html="model.trustThisContent(widget.text)">-->
+            <!--</div>-->
+        <!--</div>-->
     </div>
+
+
+    <!--<div class="wd-widget">-->
+        <!--<div class="wd-toolbar">-->
+            <!--<span class="glyphicon glyphicon-cog"></span>-->
+            <!--<span class="glyphicon glyphicon-align-justify"></span>-->
+        <!--</div>-->
+        <!--<h1>GIZMODO</h1>-->
+    <!--</div>-->
+
+    <!--<div class="wd-widget">-->
+        <!--<div class="wd-toolbar">-->
+            <!--<span class="glyphicon glyphicon-cog"></span>-->
+            <!--<span class="glyphicon glyphicon-align-justify"></span>-->
+        <!--</div>-->
+        <!--<h3>Zillow Sends Cease and Desist Letter To McMansion Hell, the Architectural Criticism Blog We Need Right Now</h3>-->
+    <!--</div>-->
+
+    <!--<div class="wd-widget">-->
+        <!--<div class="wd-toolbar">-->
+            <!--<a href="widget-image-edit.html">-->
+                <!--<span class="glyphicon glyphicon-cog"></span>-->
+            <!--</a>-->
+            <!--<span class="glyphicon glyphicon-align-justify"></span>-->
+        <!--</div>-->
+        <!--<img width="100%" src="https://i.kinja-img.com/gawker-media/image/upload/s&#45;&#45;tSlJjrtM&#45;&#45;/c_scale,fl_progressive,q_80,w_800/acdlgmncfi8uwe3teofq.jpg"/>-->
+    <!--</div>-->
+
+    <!--<div class="wd-widget">-->
+        <!--<div class="wd-toolbar">-->
+            <!--<span class="glyphicon glyphicon-cog"></span>-->
+            <!--<span class="glyphicon glyphicon-align-justify"></span>-->
+        <!--</div>-->
+        <!--<p>For years, it was one of the better fan theories out there, and now it’s confirmed to be true: Peter Parker was in<em> Iron Man 2</em>. </p>-->
+        <!--<p>“It is Peter Parker,” <em>Spider-Man: Homecoming</em> star Tom Holland told <em>The</em>&nbsp;<em>Huffington Post</em>.</p>-->
+    <!--</div>-->
+
+    <!--<div>-->
+        <!--<div class="embed-responsive embed-responsive-16by9">-->
+            <!--<iframe width="640" height="360" src="https://www.youtube.com/embed/6xRQ5qOtsHI" frameborder="0" allowfullscreen></iframe>"-->
+            <!--allowfullscreen></iframe>-->
+            <!--<div class="wd-toolbar">-->
+                <!--<a href="widget-youtube.html">-->
+                    <!--<span class="glyphicon glyphicon-cog"></span>-->
+                <!--</a>-->
+                <!--<span class="glyphicon glyphicon-align-justify"></span>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
 </div>
 
-<!--
-<div class="container">
-    <div>
-        <div class="pull-right">
-            <a href="#" class="pull-right">
-                <span class="glyphicon glyphicon-menu-hamburger"></span>
-            </a>
-            <a href="widget-heading.html">
-                <span class="glyphicon glyphicon-cog"></span>
-            </a>
-        </div>
-        <h3>Pike Place Market</h3>
-    </div>
-
-    <div>
-        <div class="pull-right">
-            <a href="#" class="pull-right">
-                <span class="glyphicon glyphicon-menu-hamburger"></span>
-            </a>
-            <a href="widget-textinput.html">
-                <span class="glyphicon glyphicon-cog"></span>
-            </a>
-        </div>
-        <p class="cl-widget-paragraph cl-text-bold">One of Seattle's landmarks</p>
-    </div>
-
-    <div>
-        <div>
-            <a href="#" class="pull-right">
-                <span class="glyphicon glyphicon-menu-hamburger"></span>
-            </a>
-            <a href="widget-image.html" class="pull-right">
-                <span class="glyphicon glyphicon-cog"></span>
-            </a>
-            <img class="img-responsive img-rounded cl-widget-images"
-                 src="https://static.seattletimes.com/wp-content/uploads/2017/06/edb7578c-4732-11e7-a704-3d82cfa498ed-1242x828.jpg">
-        </div>
-    </div>
-
-    <div>
-        <div class="pull-right">
-            <a href="#" class="pull-right">
-                <span class="glyphicon glyphicon-menu-hamburger"></span>
-            </a>
-            <a href="widget-textinput.html">
-                <span class="glyphicon glyphicon-cog"></span>
-            </a>
-        </div>
-        <p class="cl-widget-paragraph">Image Description Space</p>
-    </div>
-
-
-    <div class="rt-list-item-dim">
-        <div class="pull-right">
-            <a href="#" class="pull-right">
-                <span class="glyphicon glyphicon-menu-hamburger"></span>
-            </a>
-            <a href="widget-heading.html" class="">
-                <span class="glyphicon glyphicon-cog"></span>
-            </a>
-        </div>
-        <h3>Born In China - "Earth Day" Trailer</h3>
-    </div>
-
-    <div>
-        <div class="embed-responsive embed-responsive-16by9">
-            <iframe width="640" height="360" src="https://www.youtube.com/embed/6xRQ5qOtsHI" frameborder="0" allowfullscreen></iframe>"
-                    allowfullscreen></iframe>
-            <a href="#" class="pull-right">
-                <span class="glyphicon glyphicon-menu-hamburger" style="background-color: white"></span>
-            </a>
-            <a href="widget-youtube.html" class="pull-right">
-                <span class="glyphicon glyphicon-cog" style="background-color: white"></span>
-            </a>
-        </div>
-    </div>
-</div>
-
-
-<div>
-    <div class="pull-right">
-        <a href="#" class="pull-right">
-            <span class="glyphicon glyphicon-menu-hamburger"></span>
-        </a>
-        <a href="widget-textinput.html">
-            <span class="glyphicon glyphicon-cog"></span>
-        </a>
-    </div>
-    <p class="cl-widget-paragraph">Video Description Space</p>
-</div>
--->
 <nav class="navbar navbar-default navbar-fixed-bottom">
     <div class="container-fluid row">
         <div class="pull-right navbar-text">
 
-            <a href="#!/user/{{model.uid}}" class="tv-icon-padding">
+            <a href="#!/user/{{model.userId}}" class="tv-icon-padding">
                 <span class="glyphicon glyphicon-user"></span>
             </a>
 
