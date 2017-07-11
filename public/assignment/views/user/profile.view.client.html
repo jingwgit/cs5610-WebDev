@@ -3,7 +3,7 @@
         <a class="wd-text-white navbar-brand wd-text-bold">
             Profile
         </a>
-        <a ng-click="model.updateUser()"
+        <a ng-click="model.updateUser(model.user)"
            class="navbar-link navbar-text pull-right wd-text-white wd-icon-padding">
             <span class="glyphicon glyphicon-ok"></span>
         </a>
@@ -11,9 +11,9 @@
 </nav>
 
 <div class="container">
-    <div ng-show="model.updatedMessage"
+    <div ng-show="model.message"
          class="alert alert-success"
-         role="alert">{{model.updatedMessage}}
+         role="alert">{{model.message}}
     </div>
 
    <form class="wd-form-bottom-padding">
@@ -48,7 +48,8 @@
    </form>
 
     <a href="#!/user/{{model.user._id}}/website" class="btn btn-primary btn-block">Websites</a>
-    <a href="#!/login" class="btn btn-danger btn-block">Logout</a>
+    <a href="#!/login" class="btn btn-success btn-block">Logout</a>
+    <a ng-click="model.deleteUser(model.user)" class="btn btn-danger btn-block">Delete</a>
 </div>
 
 <nav class="navbar navbar-fixed-bottom wd-blue-navbar">

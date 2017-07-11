@@ -9,14 +9,34 @@
         var vm = this;
         vm.userId = $routeParams.userId;
         vm.websiteId = $routeParams.websiteId;
-        vm.pages = PageService.findPageByWebsiteId(vm.websiteId);
+
+        init();
+
+        function init() {
+            PageService
+                .findAllPagesForWebsite(vm.websiteId)
+                .then(function (pages) {
+                    vm.pages = pages;
+                })
+        }
     }
-    function NewPageController($routeParams, PageService){
+
+    function NewPageController($routeParams, $timeout, PageService){
         var vm = this;
         vm.userId = $routeParams.userId;
         vm.websiteId = $routeParams.websiteId;
-        vm.pages = PageService.findPageByWebsiteId(vm.websiteId);
         vm.createPage = createPage;
+
+        init();
+
+        function init() {
+            PageService
+                .findAllPagesForWebsite(vm.websiteId)
+                .then(function (pages) {
+                    vm.pages = pages;
+                });
+
+        }
 
         function createPage() {
             if(vm.pageName === null || vm.pageName === undefined || vm.pageName === ""){
@@ -30,8 +50,25 @@
                 name: vm.pageName,
                 description: vm.pageDescription
             };
-            PageService.createPage(vm.websiteId, newPage);
-            vm.pages = PageService.findPageByWebsiteId(vm.websiteId);
+            PageService
+                .createPage(vm.websiteId, newPage)
+                .then(function () {
+                    vm.message = "Successfully created new page!";
+                    $timeout(function(){
+                        vm.message = null;
+                    }, 3500);
+                }, function () {
+                    vm.error = "Unable to create page!"
+                    $timeout(function(){
+                        vm.error = null;
+                    }, 3500);
+                });
+
+            PageService
+                .findAllPagesForWebsite(vm.websiteId)
+                .then(function (pages) {
+                    vm.pages = pages;
+                });
             vm.pageName = null;
             vm.pageDescription = null;
         }
@@ -41,10 +78,24 @@
         vm.userId = $routeParams.userId;
         vm.websiteId = $routeParams.websiteId;
         vm.pageId = $routeParams.pageId;
-        vm.pages = PageService.findPageByWebsiteId(vm.websiteId);
-        vm.currentPage = PageService.findPageById(vm.pageId);
         vm.editPage = editPage;
         vm.deletePage = deletePage;
+
+
+        init();
+
+        function init() {
+            PageService
+                .findAllPagesForWebsite(vm.websiteId)
+                .then(function (pages) {
+                    vm.pages = pages;
+                });
+
+            PageService.findPageById(vm.pageId)
+                .then(function (cur) {
+                    vm.currentPage = cur;
+                });
+        }
 
         function editPage() {
             if(vm.currentPage.name === null
@@ -60,13 +111,25 @@
                 name: vm.currentPage.name,
                 description: vm.currentPage.description
             };
-            PageService.updatePage(vm.pageId, editedPage);
-            $location.url("/user/"+vm.userId+"/website/"+vm.websiteId+"/page");
+            PageService.updatePage(vm.pageId, editedPage)
+                .then(function () {
+                    $location.url("/user/"+vm.userId+"/website/"+vm.websiteId+"/page");
+                });
+
         }
 
         function deletePage() {
-            PageService.deletePageById(vm.pageId);
-            $location.url("/user/"+vm.userId+"/website/"+vm.websiteId+"/page");
+            PageService
+                .deletePage(vm.pageId)
+                .then(function () {
+                    $location.url("/user/"+vm.userId+"/website/"+vm.websiteId+"/page");
+                }, function () {
+                    vm.error = "Unable to delete page!";
+                    $timeout(function(){
+                        vm.error = null;
+                    }, 3500);
+                })
+
         }
     }
 })();

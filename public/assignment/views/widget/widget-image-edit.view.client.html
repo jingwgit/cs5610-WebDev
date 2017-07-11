@@ -8,7 +8,7 @@
             </a>
         </div>
         <div class="navbar-text pull-right">
-            <a ng-click="model.editWidget()" class="wd-icon-padding wd-text-black">
+            <a ng-click="model.updateWidget()" class="wd-icon-padding wd-text-black">
           <span class="glyphicon glyphicon-ok">
           </span>
             </a>
@@ -46,15 +46,26 @@
            ng-model="model.widgetUrl"
            class="form-control"/>
 
-    <label for="file">File Upload</label>
-    <input id="file"
-           type="file"
-           multiple
-           class="form-control"/>
+    <label>File Upload</label>
+    <form action="/api/upload"   method="post" enctype="multipart/form-data">
+        <input  name="myFile"    type="file" class="form-control"/>
+        <input  name="width"     value="{{model.widget.width}}" style="display: none"/>
+        <input  name="userId"    value="{{model.userId}}"   style="display: none"/>
+        <input  name="websiteId" value="{{model.websiteId}}"   style="display: none"/>
+        <input  name="pageId"    value="{{model.pageId}}"   style="display: none"/>
+        <input  name="widgetId"  value="{{model.widgetId}}"   style="display: none"/>
+        <button type="submit"    class="btn btn-block btn-primary">Upload Image</button>
+    </form>
 
-    <a class="btn btn-primary btn-block">
-        Upload Image
-    </a>
+    <!--<label for="file">File Upload</label>-->
+    <!--<input id="file"-->
+           <!--type="file"-->
+           <!--multiple-->
+           <!--class="form-control"/>-->
+
+    <!--<a class="btn btn-primary btn-block">-->
+        <!--Upload Image-->
+    <!--</a>-->
 
     <a ng-click="model.deleteWidget()"
        class="btn btn-danger btn-block">
