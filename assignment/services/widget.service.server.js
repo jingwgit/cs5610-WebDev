@@ -24,9 +24,9 @@ module.exports = function(app) {
     app.post ("/api/upload", upload.single('myFile'), uploadImage);
 
     function uploadImage(req, res) {
-
         var widgetId      = req.body.widgetId;
         var width         = req.body.width;
+        var name          = req.body.name;
         var myFile        = req.file;
         var userId = req.body.userId;
         var websiteId = req.body.websiteId;
@@ -39,20 +39,31 @@ module.exports = function(app) {
         var size          = myFile.size;
         var mimetype      = myFile.mimetype;
 
-        for (var w in widgets) {
-            if (parseInt(widgets[w]._id) === parseInt(widgetId)) {
-                //widgets[w].url = '/assignment/uploads/'+filename + ".jpg";
-                widgets[w].url = './public/assignment/uploads/'+filename;
-                console.log(widgets[w]);
-                break;
+        if(widgetId) {//for image edit
+            for (var w in widgets) {
+                if (parseInt(widgets[w]._id) === parseInt(widgetId)) {
+                    widgets[w].url = './uploads/'+filename;
+                    break;
+                }
             }
+            var callbackUrl   = "/#!/user/"+userId+"/website/"+websiteId+"/page/"+pageId+"/widget";
+
+            res.redirect(callbackUrl);
+        } else {// for create new image
+            var newImageId = new Date().getTime() + "";
+            var newImage = {
+                _id: newImageId,
+                widgetType: 'IMAGE',
+                pageId: pageId,
+                width: width,
+                url: './uploads/'+filename
+            };
+            widgets.push(newImage);
+            var callbackUrl   = "/#!/user/"+userId+"/website/"+websiteId+"/page/"+pageId+"/widget/"+newImageId;
+
+            res.redirect(callbackUrl);
+
         }
-
-        //console.log(widgets);
-
-        var callbackUrl   = "/#!/user/"+userId+"/website/"+websiteId+"/page/"+pageId+"/widget";
-
-        res.redirect(callbackUrl);
     }
 
     app.post("/api/page/:pageId/widget", createWidget);
@@ -60,44 +71,16 @@ module.exports = function(app) {
     app.get("/api/widget/:widgetId", findWidgetById);
     app.put("/api/widget/:widgetId", updateWidget);
     app.delete("/api/widget/:widgetId", deleteWidget);
+    app.put("/page/:pageId/widget", sortWidgets);
 
-
-    function createHeader(pageId, widget, widgetId) {
-        var newHeader = {
-            _id: widgetId,
-            widgetType: 'HEADING',
-            pageId: pageId,
-            size: widget.size,
-            text: widget.text,
-            name: widget.name
-
-        }
-        return newHeader;
+    function sortWidgets(req, res) {
+        var start = req.query.initial;
+        var end = req.query.final;
+        widgets.splice(end, 0, widgets.splice(start, 1)[0]);
     }
 
-    function createImage(pageId, widget, widgetId) {
-        var newImage = {
-            _id: widgetId,
-            widgetType: 'IMAGE',
-            pageId: pageId,
-            name: widget.name,
-            width: widget.width,
-            url: widget.url
-        }
-        return newImage;
-    }
 
-    function createYouTube(pageId, widget, widgetId) {
-        var newYouTube = {
-            _id: widgetId,
-            widgetType: 'YOUTUBE',
-            pageId: pageId,
-            name: widget.name,
-            width: widget.width,
-            url: widget.url
-        }
-        return newYouTube;
-    }
+
 
     function createWidget(req, res) {
         var pageId = req.params.pageId;
@@ -191,6 +174,43 @@ module.exports = function(app) {
             }
         }
         res.sendStatus(404);
+    }
+
+    function createHeader(pageId, widget, widgetId) {
+        var newHeader = {
+            _id: widgetId,
+            widgetType: 'HEADING',
+            pageId: pageId,
+            size: widget.size,
+            text: widget.text,
+            name: widget.name
+
+        }
+        return newHeader;
+    }
+
+    function createImage(pageId, widget, widgetId) {
+        var newImage = {
+            _id: widgetId,
+            widgetType: 'IMAGE',
+            pageId: pageId,
+            name: widget.name,
+            width: width,
+            url: widget.url
+        }
+        return newImage;
+    }
+
+    function createYouTube(pageId, widget, widgetId) {
+        var newYouTube = {
+            _id: widgetId,
+            widgetType: 'YOUTUBE',
+            pageId: pageId,
+            name: widget.name,
+            width: widget.width,
+            url: widget.url
+        }
+        return newYouTube;
     }
 
 }

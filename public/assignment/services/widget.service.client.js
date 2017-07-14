@@ -10,9 +10,17 @@
             'findAllWidgetsForPage': findAllWidgetsForPage,
             'findWidgetById': findWidgetById,
             'updateWidget': updateWidget,
-            'deleteWidget': deleteWidget
+            'deleteWidget': deleteWidget,
+            'sort': sort
         };
         return api;
+
+        function sort(start, end, pageId) {
+            var url = "/page/" + pageId + "/widget?initial=index1&final=index2";
+            url = url.replace("index1", start)
+                .replace("index2", end);
+            $http.put(url);
+        }
 
         function createWidget(pageId, widget) {
             var url = "/api/page/" + pageId + "/widget";
