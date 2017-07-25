@@ -11,11 +11,13 @@
             'findWidgetById': findWidgetById,
             'updateWidget': updateWidget,
             'deleteWidget': deleteWidget,
-            'sort': sort
+            'deleteWidgetFromPage': deleteWidgetFromPage,
+            'deleteWidgetsByPage': deleteWidgetsByPage,
+            'sortWidgets': sortWidgets
         };
         return api;
 
-        function sort(start, end, pageId) {
+        function sortWidgets(start, end, pageId) {
             var url = "/page/" + pageId + "/widget?initial=index1&final=index2";
             url = url.replace("index1", start)
                 .replace("index2", end);
@@ -71,6 +73,23 @@
 
         function deleteWidget(widgetId) {
             var url = "/api/widget/" + widgetId;
+            return $http.delete(url)
+                .then(function (response) {
+                    return response.data;
+                });
+        }
+
+
+        function deleteWidgetFromPage(pageId, widgetId) {
+            var url = "/api/page/" + pageId + "/widget/" + widgetId;
+            return $http.delete(url)
+                .then(function (response) {
+                    return response.data;
+                });
+        }
+
+        function deleteWidgetsByPage(pageId){
+            var url = "/api/page/" + pageId + "/widget";
             return $http.delete(url)
                 .then(function (response) {
                     return response.data;

@@ -5,7 +5,8 @@
         .controller("WidgetListController", WidgetListController)
         .controller("NewWidgetController", NewWidgetController)
         .controller("CreateWidgetController", CreateWidgetController)
-        .controller("EditWidgetController", EditWidgetController);
+        .controller("EditWidgetController", EditWidgetController)
+        .controller("FlickrImageSearchController", FlickrImageSearchController);
 
 
     function WidgetListController($routeParams, WidgetService, $sce) {
@@ -14,7 +15,7 @@
         vm.websiteId = $routeParams.websiteId;
         vm.pageId = $routeParams.pageId;
         vm.getWidgetUrlForType = getWidgetUrlForType;
-        //vm.trustThisContent = trustThisContent;
+        vm.trustThisContent = trustThisContent;
         vm.getYoutubeEmbedUrl = getYoutubeEmbedUrl;
 
         init();
@@ -31,10 +32,10 @@
             return 'views/widget/widget-' + widgetType.toLowerCase() +'.view.client.html';
         }
 
-        // function trustThisContent(html) {
-        //     //diligence to scrub any unsafe content
-        //     return $sce.trustAsHtml(html);
-        // }
+        function trustThisContent(html) {
+            //diligence to scrub any unsafe content
+            return $sce.trustAsHtml(html);
+        }
 
         function getYoutubeEmbedUrl(link) {
             var embedUrl = "https://www.youtube.com/embed/";
@@ -76,22 +77,27 @@
                     return;
                 }
             }
+
             var newWidget = {
                 name: vm.widgetName,
                 text: vm.widgetText,
                 widgetType: vm.widgetType,
                 size: vm.widgetSize,
                 width: vm.widgetWidth,
-                url: vm.widgetUrl
+                url: vm.widgetUrl,
+                rows: vm.rows,
+                placeholder: vm.placeholder,
+                formatted: vm.formatted,
             };
 
             WidgetService
                 .createWidget(vm.pageId, newWidget)
-                .then(function () {
+                .then(function (widget) {
                     vm.message = "Successfully created new widget!"
                     $location.url("/user/" + vm.userId + "/website/" + vm.websiteId + "/page/" + vm.pageId + "/widget");
+                }, function (error) {
+                    console.log(error);
                 });
-
         }
     }
 
@@ -125,6 +131,15 @@
                         vm.widgetText = vm.currentWidget.text;
                         vm.widgetUrl = vm.currentWidget.url;
                         vm.widgetWidth = vm.currentWidget.width;
+                    } else if (vm.currentWidget.widgetType === "HTML") {
+                        vm.widgetName = vm.currentWidget.name;
+                        vm.widgetText = vm.currentWidget.text;
+                    } else if (vm.currentWidget.widgetType === "TEXT") {
+                        vm.widgetName = vm.currentWidget.name;
+                        vm.widgetText = vm.currentWidget.text;
+                        vm.rows = vm.currentWidget.rows;
+                        vm.placeholder = vm.currentWidget.placeholder;
+                        vm.formatted = vm.currentWidget.formatted;
                     }
                 });
         }
@@ -134,10 +149,13 @@
             var updatedWidget = {
                 name: vm.widgetName,
                 text: vm.widgetText,
-                widgetType: vm.currentWidget.widgetType,
+                widgetType: vm.widgetType,
                 size: vm.widgetSize,
                 width: vm.widgetWidth,
-                url: vm.widgetUrl
+                url: vm.widgetUrl,
+                rows: vm.rows,
+                placeholder: vm.placeholder,
+                formatted: vm.formatted
             };
 
             WidgetService
@@ -151,12 +169,57 @@
 
         function deleteWidget() {
             WidgetService
-                .deleteWidget(vm.widgetId)
+                .deleteWidgetFromPage(vm.pageId, vm.widgetId)
                 .then(function () {
                     $location.url("/user/" + vm.userId + "/website/" + vm.websiteId + "/page/" + vm.pageId + "/widget");
                 }, function () {
                     vm.error = "Unable to delete widget!"
                 });
+        }
+
+    }
+
+    function FlickrImageSearchController($routeParams, $location, FlickrService, WidgetService) {
+        var vm = this;
+        vm.userId = $routeParams.userId;
+        vm.websiteId = $routeParams.websiteId;
+        vm.pageId = $routeParams.pageId;
+        vm.widgetId = $routeParams.widgetId;
+        vm.searchPhotos = searchPhotos;
+        vm.selectPhoto = selectPhoto;
+
+        init();
+
+        function init() {
+            WidgetService
+                .findWidgetById(vm.widgetId)
+                .then(function (widget) {
+                   vm.currentWidget = widget;
+                });
+        }
+
+        function selectPhoto(photo) {
+            var url = "https://farm" + photo.farm + ".staticflickr.com/" + photo.server;
+            url += "/" + photo.id + "_" + photo.secret + "_b.jpg";
+            vm.currentWidget.url = url;
+
+            WidgetService
+                .updateWidget(vm.widgetId, vm.currentWidget)
+                .then(function () {
+                    $location.url("/user/" + vm.userId + "/website/" + vm.websiteId + "/page/" + vm.pageId + "/widget/");
+                });
+        }
+
+        function searchPhotos(searchTerm) {
+            FlickrService
+                .searchPhotos(searchTerm)
+                .then(function(response) {
+                    data = response.data.replace("jsonFlickrApi(","");
+                    data = data.substring(0,data.length - 1);
+                    data = JSON.parse(data);
+                    vm.photos = data.photos;
+                });
+
         }
 
     }

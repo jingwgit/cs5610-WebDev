@@ -5,7 +5,9 @@
 
     function wdSortable() {
 
-        function linker(scope, element, atrributes) {
+        function linker(scope, element, atrributes, $routeParams) {
+            var pageId = $routeParams.pageId;
+            console.log(pageId);
             var start = -1;
             var end = -1;
             $(element).sortable({
@@ -14,7 +16,7 @@
                 },
                 stop: function (event, ui) {
                     end = ($(ui.item).index());
-                    scope.sortableController.sort(start, end);
+                    scope.sortableController.sortWidgets(start, end, pageId);
                 }
             });
         }
@@ -29,10 +31,10 @@
 
     function sortableController(WidgetService) {
         var vm = this;
-        vm.sort = sort;
+        vm.sortWidgets = sortWidgets;
 
-        function sort(start, end) {
-            WidgetService.sort(start,end);
+        function sortWidgets(start, end, pageId) {
+            WidgetService.sortWidgets(start,end, pageId);
         }
     }
 })();

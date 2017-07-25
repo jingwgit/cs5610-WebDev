@@ -18,11 +18,12 @@
                 vm.error = "Please enter your password";
                 return;
             }
+            //console.log(username, password);
             UserService.findUserByCredentials(username, password)
                 .then(function (user) {
                     $location.url("/user/" + user._id);
                 }, function (error) {
-                    vm.error = "Username " + username + " does not exist."
+                    vm.error = "Username " + username + " does not exist.";
                     $timeout(function() {
                         vm.error = null;
                     }, 5000);
@@ -64,7 +65,7 @@
         }
     }
 
-    function ProfileController($routeParams, $location, $timeout, UserService) {
+    function ProfileController($routeParams, $location, $timeout, UserService, WebsiteService) {
         var vm = this;
         userId = $routeParams.userId;
         vm.updateUser = updateUser;
@@ -99,6 +100,8 @@
                 .deleteUser(user._id)
                 .then(function () {
                     $location.url('/login');
+                    WebsiteService
+                        .deleteWebsitesByUser(user._id);
                 }, function () {
                     vm.error = "Unable to unregister you!"
                 });

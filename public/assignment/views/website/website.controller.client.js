@@ -48,7 +48,7 @@
                 description: vm.description
             };
             WebsiteService
-                .createWebsite(vm.userId, newWebsite)
+                .createWebsiteForUser(vm.userId, newWebsite)
                 .then(function () {
                     vm.message = "Successfully created new website!";
                     $timeout(function(){
@@ -72,7 +72,7 @@
             //$location.url("/user/" + vm.userId + "/website");
         }
     }
-    function EditWebsiteController($routeParams, $location, WebsiteService, PageService){
+    function EditWebsiteController($routeParams, $timeout, $location, WebsiteService, PageService){
         var vm = this;
         vm.userId = $routeParams.userId;
         vm.websiteId = $routeParams.websiteId;
@@ -130,7 +130,7 @@
 
         function deleteWebsite(){
             WebsiteService
-                .deleteWebsite(vm.websiteId)
+                .deleteWebsiteFromUser(vm.userId, vm.websiteId)
                 .then(function () {
                     PageService
                         .deletePagesByWebsite(vm.websiteId);

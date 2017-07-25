@@ -36,8 +36,12 @@
             <ul class="list-group">
                 <li ng-repeat="website in model.websites"
                     class="list-group-item wd-list-item-borderless">
-                    <a href=#!/user/{{website.developerId}}/website/{{website._id}}"><span class="glyphicon glyphicon-cog pull-right"></span></a>
-                    <a href="#!/user/{{website.developerId}}/website/{{website._id}}/page">{{website.name}}</a>
+                    <a href="#!/user/{{website._user._id}}/website/{{website._id}}">
+                        <span class="glyphicon glyphicon-cog pull-right"></span>
+                    </a>
+                    <a href="#!/user/{{website._user._id}}/website/{{website._id}}/page">
+                        {{website.name}}
+                    </a>
                 </li>
             </ul>
         </div>

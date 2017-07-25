@@ -1,3 +1,3 @@
 (function(){
-    angular.module("WebAppMaker", ['ngRoute', 'utility']);
+    angular.module("WebAppMaker", ['ngRoute', 'utility', 'textAngular']);
 })();

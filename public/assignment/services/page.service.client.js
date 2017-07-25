@@ -11,6 +11,7 @@
             "findPageById": findPageById,
             "updatePage": updatePage,
             "deletePage": deletePage,
+            "deletePageFromWebsite": deletePageFromWebsite,
             "deletePagesByWebsite" : deletePagesByWebsite
         };
         return api;
@@ -21,14 +22,6 @@
                 .then(function (response) {
                     return response.data;
                 });
-            // var newPageId = getNextId();
-            // var newPage = {
-            //     _id: newPageId,
-            //     name: page.name,
-            //     websiteId: websiteId,
-            //     description: page.description
-            // };
-            // pages.push(newPage);
         }
 
         function findAllPagesForWebsite(websiteId) {
@@ -37,12 +30,6 @@
                 .then(function (response) {
                     return response.data;
                 });
-            // var result = [];
-            // function filterByWebsiteId(page){
-            //     return page.websiteId === websiteId;
-            // }
-            // result = pages.filter(filterByWebsiteId);
-            // return result;
         }
 
         function findPageById(pageId) {
@@ -51,13 +38,6 @@
                 .then(function (response) {
                     return response.data;
                 });
-            // for (p in pages){
-            //     var page = pages[p];
-            //     if(parseInt(page._id) === parseInt(pageId)){
-            //         return page;
-            //     }
-            // }
-            // return null;
         }
 
         function updatePage(pageId, page) {
@@ -66,10 +46,6 @@
                 .then(function (response) {
                     return response.data;
                 });
-            // var oldPage = findPageById(pageId);
-            // var index = pages.indexOf(oldPage);
-            // pages[index].name = page.name;
-            // pages[index].description = page.description;
         }
 
         function deletePage(pageId) {
@@ -78,9 +54,14 @@
                 .then(function (response) {
                     return response.data;
                 });
-            // var oldPage = findPageById(pageId);
-            // var index = pages.indexOf(oldPage);
-            // pages.splice(index, 1);
+        }
+
+        function deletePageFromWebsite(websiteId, pageId) {
+            var url = "/api/website/" + websiteId + "/page/" + pageId;
+            return $http.delete(url)
+                .then(function (response) {
+                    return response.data;
+                });
         }
 
         function deletePagesByWebsite(websiteId){
@@ -89,12 +70,6 @@
                 .then(function (response) {
                     return response.data;
                 });
-            // for(p in pages){
-            //     var page = pages[p];
-            //     if(page.websiteId === websiteId){
-            //         deletePage(page._id);
-            //     }
-            // }
         }
     }
 })();

@@ -120,8 +120,10 @@
 
         function deletePage() {
             PageService
-                .deletePage(vm.pageId)
+                .deletePageFromWebsite(vm.websiteId, vm.pageId)
                 .then(function () {
+                    WidgetService
+                        .deleteWidgetsByPage(vm.pageId);
                     $location.url("/user/"+vm.userId+"/website/"+vm.websiteId+"/page");
                 }, function () {
                     vm.error = "Unable to delete page!";
