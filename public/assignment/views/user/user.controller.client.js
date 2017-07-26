@@ -65,11 +65,12 @@
         }
     }
 
-    function ProfileController($routeParams, $location, $timeout, UserService, WebsiteService) {
+    function ProfileController($routeParams, $location, $timeout, UserService, WebsiteService, PageService, WidgetService) {
         var vm = this;
-        userId = $routeParams.userId;
+        var userId = $routeParams.userId;
         vm.updateUser = updateUser;
         vm.deleteUser = deleteUser;
+        vm.pages = [];
 
         init();
 
@@ -81,6 +82,42 @@
                 }, function (error) {
                     vm.error = "User not found!";
                 });
+
+            WebsiteService
+                .findAllWebsitesForUser(userId)
+                .then(function (websites) {
+                    vm.websites = websites;
+                    findAllPagesForUser();
+                });
+        }
+
+
+        function findAllPagesForUser() {
+            var i = 0;
+            for(var w in vm.websites) {
+                PageService
+                    .findAllPagesForWebsite(vm.websites[w]._id)
+                    .then(function (pages) {
+                       for(var p in pages) {
+                           vm.pages[i] = pages[p];
+                           i++;
+                       }
+                    });
+            }
+        }
+
+        function deleteAllPagesForUser() {
+            for(var w in vm.websites) {
+                PageService
+                    .deletePagesByWebsite(vm.websites[w]._id);
+            }
+        }
+
+        function deleteAllWidgetsForUser() {
+            for (var p in vm.pages) {
+                WidgetService
+                    .deleteWidgetsByPage(vm.pages[p]._id);
+            }
         }
 
         function updateUser(user) {
@@ -101,7 +138,11 @@
                 .then(function () {
                     $location.url('/login');
                     WebsiteService
-                        .deleteWebsitesByUser(user._id);
+                        .deleteWebsitesByUser(user._id)
+                        .then(function () {
+                            deleteAllPagesForUser();
+                            deleteAllWidgetsForUser();
+                        });
                 }, function () {
                     vm.error = "Unable to unregister you!"
                 });

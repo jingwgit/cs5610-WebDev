@@ -50,7 +50,6 @@ function updateUser(userId, newUser) {
 }
 
 function deleteUser(userId) {
-
     return userModel
         .remove({_id: userId});
 }

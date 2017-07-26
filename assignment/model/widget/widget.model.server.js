@@ -12,8 +12,18 @@ widgetModel.findWidgetById = findWidgetById;
 widgetModel.updateWidget = updateWidget;
 widgetModel.deleteWidgetFromPage = deleteWidgetFromPage;
 widgetModel.deleteWidgetsByPage = deleteWidgetsByPage;
-// widgetModel.reorderWidget = reorderWidget;
+widgetModel.reorderWidget = reorderWidget;
 
+
+//reorder the widget id element in page's "widgets" field
+function reorderWidget(start, end, pageId) {
+    return pageModel
+        .findById(pageId)
+        .then(function (page) {
+            page.widgets.splice(end, 0, page.widgets.splice(start, 1)[0]);
+            return page.save();
+        });
+}
 
 function createWidget(pageId, widget) {
     widget._page = pageId;

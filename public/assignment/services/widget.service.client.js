@@ -17,12 +17,6 @@
         };
         return api;
 
-        function sortWidgets(start, end, pageId) {
-            var url = "/page/" + pageId + "/widget?initial=index1&final=index2";
-            url = url.replace("index1", start)
-                .replace("index2", end);
-            $http.put(url);
-        }
 
         function createWidget(pageId, widget) {
             var url = "/api/page/" + pageId + "/widget";
@@ -30,20 +24,6 @@
                 .then(function (response) {
                     return response.data;
                 });
-            // var newWidgetId = getNextId();
-            // var newWidget = null;
-            // if(widget.widgetType === 'HEADING') {
-            //     newWidget = createHeader(pageId, widget, newWidgetId);
-            // } else if(widget.widgetType === 'IMAGE') {
-            //     newWidget = createImage(pageId, widget, newWidgetId);
-            // } else if(widget.widgetType === 'YOUTUBE') {
-            //     newWidget = createYouTube(pageId, widget, newWidgetId);
-            // }
-            //
-            // if(newWidget !== null) {
-            //     widgets.push(newWidget);
-            // }
-
         }
 
         function findAllWidgetsForPage(pageId) {
@@ -94,6 +74,13 @@
                 .then(function (response) {
                     return response.data;
                 });
+        }
+
+        function sortWidgets(start, end, pageId) {
+            var url = "/page/" + pageId + "/widget?initial=index1&final=index2";
+            url = url.replace("index1", start)
+                .replace("index2", end);
+            $http.put(url);
         }
 
     }

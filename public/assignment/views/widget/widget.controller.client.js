@@ -9,7 +9,7 @@
         .controller("FlickrImageSearchController", FlickrImageSearchController);
 
 
-    function WidgetListController($routeParams, WidgetService, $sce) {
+    function WidgetListController($routeParams, WidgetService, PageService, $sce) {
         var vm = this;
         vm.userId = $routeParams.userId;
         vm.websiteId = $routeParams.websiteId;
@@ -17,15 +17,25 @@
         vm.getWidgetUrlForType = getWidgetUrlForType;
         vm.trustThisContent = trustThisContent;
         vm.getYoutubeEmbedUrl = getYoutubeEmbedUrl;
+        vm.widgets = [];
 
         init();
 
         function init() {
-            WidgetService
-                .findAllWidgetsForPage(vm.pageId)
-                .then(function (widgets) {
-                    vm.widgets = widgets;
+            PageService
+                .findPageById(vm.pageId)
+                .then(function (page) {
+                    var i = 0;
+                    for (var w in page.widgets) {
+                        WidgetService
+                            .findWidgetById(page.widgets[w])
+                            .then(function (widget) {
+                                vm.widgets[i] = widget;
+                                i++;
+                            });
+                    }
                 });
+
         }
 
         function getWidgetUrlForType(widgetType) {
@@ -52,7 +62,6 @@
         vm.userId = $routeParams.userId;
         vm.websiteId = $routeParams.websiteId;
         vm.pageId = $routeParams.pageId;
-        //vm.widgets = WidgetService.findWidgetsByPageId(vm.pageId);
     }
 
     function CreateWidgetController($routeParams, $location, WidgetService) {
@@ -87,13 +96,13 @@
                 url: vm.widgetUrl,
                 rows: vm.rows,
                 placeholder: vm.placeholder,
-                formatted: vm.formatted,
+                formatted: vm.formatted
             };
 
             WidgetService
                 .createWidget(vm.pageId, newWidget)
                 .then(function (widget) {
-                    vm.message = "Successfully created new widget!"
+                    vm.message = "Successfully created new widget!";
                     $location.url("/user/" + vm.userId + "/website/" + vm.websiteId + "/page/" + vm.pageId + "/widget");
                 }, function (error) {
                     console.log(error);

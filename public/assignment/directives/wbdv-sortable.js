@@ -3,13 +3,12 @@
         .module("utility", [])
         .directive("wdSortable", wdSortable);
 
-    function wdSortable() {
+    function wdSortable($routeParams) {
 
-        function linker(scope, element, atrributes, $routeParams) {
-            var pageId = $routeParams.pageId;
-            console.log(pageId);
+        function linker(scope, element, atrributes) {
             var start = -1;
             var end = -1;
+            var pageId = $routeParams.pageId;
             $(element).sortable({
                 start: function (event, ui) {
                     start = ($(ui.item).index());
@@ -29,8 +28,9 @@
         }
     }
 
-    function sortableController(WidgetService) {
+    function sortableController(WidgetService, $routeParams) {
         var vm = this;
+        var pageId = $routeParams.pageId;
         vm.sortWidgets = sortWidgets;
 
         function sortWidgets(start, end, pageId) {

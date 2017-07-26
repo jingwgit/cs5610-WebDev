@@ -12,6 +12,7 @@ module.exports = function(app) {
 
     var mongoose = require('mongoose');
     mongoose.connect(connectionString);
+
     //
     // var mongoose = require("mongoose");
     // mongoose.connect('mongodb://localhost/web_dev');

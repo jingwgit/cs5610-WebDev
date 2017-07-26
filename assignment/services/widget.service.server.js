@@ -19,6 +19,7 @@ module.exports = function(app) {
         var widgetId      = req.body.widgetId;
         var width         = req.body.width;
         var name          = req.body.name;
+        var text          = req.body.text;
         var myFile        = req.file;
         var userId = req.body.userId;
         var websiteId = req.body.websiteId;
@@ -32,30 +33,59 @@ module.exports = function(app) {
         var mimetype      = myFile.mimetype;
 
         if(widgetId) {//for image edit
-            for (var w in widgets) {
-                if (parseInt(widgets[w]._id) === parseInt(widgetId)) {
-                    widgets[w].url = './uploads/'+filename;
-                    break;
-                }
-            }
-            var callbackUrl   = "/#!/user/"+userId+"/website/"+websiteId+"/page/"+pageId+"/widget";
-
-            res.redirect(callbackUrl);
+            widgetModel
+                .findWidgetById(widgetId)
+                .then(function (widget) {
+                    widget.url = './uploads/'+filename;
+                    widget.save();
+                    var callbackUrl   = "/#!/user/"+userId+"/website/"+websiteId+"/page/"+pageId+"/widget";
+                    res.redirect(callbackUrl);
+                });
         } else {// for create new image
-            var newImageId = new Date().getTime() + "";
             var newImage = {
-                _id: newImageId,
+                name: name,
+                text: text,
                 widgetType: 'IMAGE',
                 pageId: pageId,
                 width: width,
                 url: './uploads/'+filename
             };
-            widgets.push(newImage);
-            var callbackUrl   = "/#!/user/"+userId+"/website/"+websiteId+"/page/"+pageId+"/widget/"+newImageId;
+            widgetModel
+                .createWidget(pageId, newImage);
 
+            var callbackUrl   = "/#!/user/"+userId+"/website/"+websiteId+"/page/"+pageId+"/widget";
             res.redirect(callbackUrl);
-
         }
+
+
+        // widgetModel
+        //     .findAllWidgetsForPage(pageId)
+        //     .then(function (widgets) {
+        //         if(widgetId) {//for image edit
+        //             for (var w in widgets) {
+        //                 if (parseInt(widgets[w]._id) === parseInt(widgetId)) {
+        //                     widgets[w].url = './uploads/'+filename;
+        //                     break;
+        //                 }
+        //             }
+        //             var callbackUrl   = "/#!/user/"+userId+"/website/"+websiteId+"/page/"+pageId+"/widget";
+        //
+        //             res.redirect(callbackUrl);
+        //         } else {// for create new image
+        //             var newImageId = new Date().getTime() + "";
+        //             var newImage = {
+        //                 _id: newImageId,
+        //                 widgetType: 'IMAGE',
+        //                 pageId: pageId,
+        //                 width: width,
+        //                 url: './uploads/'+filename
+        //             };
+        //             widgets.push(newImage);
+        //             var callbackUrl   = "/#!/user/"+userId+"/website/"+websiteId+"/page/"+pageId+"/widget/"+newImageId;
+        //
+        //             res.redirect(callbackUrl);
+        //         }
+        //     });
     }
 
     function sortWidgets(req, res) {
@@ -63,9 +93,9 @@ module.exports = function(app) {
         var start = req.query.initial;
         var end = req.query.final;
         widgetModel
-            .findAllWidgetsForPage(pageId)
-            .then(function (widgets) {
-                widgets.splice(end, 0, widgets.splice(start, 1)[0]);
+            .reorderWidget(start, end, pageId)
+            .then(function (status) {
+                res.send(status);
             });
     }
 

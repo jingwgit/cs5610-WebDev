@@ -116,6 +116,7 @@ select.form-control {
     padding-bottom: 5px;
     border-bottom-left-radius: 10px;
     opacity: 0.8;
+    z-index: 20;
 }
 
 .youtube-widget {
