@@ -54,8 +54,11 @@
    </form>
 
     <a href="#!/user/{{model.user._id}}/website" class="btn btn-primary btn-block">Websites</a>
-    <a href="#!/login" class="btn btn-success btn-block">Logout</a>
-    <a ng-click="model.deleteUser(model.user)" class="btn btn-danger btn-block">Delete</a>
+    <a ng-click="model.logout()"
+       class="btn btn-success btn-block">
+        Logout
+    </a>
+    <a ng-click="model.unregister()" class="btn btn-danger btn-block">Unregister</a>
 </div>
 
 <nav class="navbar navbar-fixed-bottom wd-blue-navbar">

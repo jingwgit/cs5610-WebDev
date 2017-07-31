@@ -6,9 +6,12 @@
 	function configuration($routeProvider) {
 		$routeProvider
 			.when('/', {
-				templateUrl : "views/user/login.view.client.html",
-				controller: "LoginController",
-				controllerAs: "model"
+				templateUrl : "views/home/home.view.client.html",
+				controller: "HomeController",
+				controllerAs: "model",
+				resolve: {
+					currentUser: checkCurrentUser
+				}
 			})
 			.when('/login', {
 				templateUrl : "views/user/login.view.client.html",
@@ -20,10 +23,30 @@
 				controller: "RegisterController",
 				controllerAs: "model"
 			})
-			.when('/user/:userId', {
+			.when('/admin', {
+            	templateUrl : "views/admin/admin.view.client.html",
+				resolve: {
+                    currentUser: checkAdmin
+				}
+        	})
+            .when('/admin/user', {
+                templateUrl : "views/admin/admin-users.view.client.html",
+                controller: "AdminUserController",
+                controllerAs: "model",
+                resolve: {
+                    currentUser: checkAdmin
+                }
+            })
+			.when('/profile', {
 				templateUrl : "views/user/profile.view.client.html",
 				controller: "ProfileController",
-				controllerAs: "model"
+				controllerAs: "model",
+				resolve: {
+					currentUser: checkLoggedIn
+				}
+				//whatever the promise returned by checkLoggedIn will be
+				// bound to the variable currentUser. This variable becomes
+				// injectable object and can be added as dependency in any controller.
 			})
 			.when('/user/:userId/website', {
 				templateUrl : "views/website/website-list.view.client.html",
@@ -84,4 +107,53 @@
 				redirectTo : "/"
 			});
 	}
+	
+	function checkLoggedIn(UserService, $q, $location) {
+		var deferred = $q.defer();
+		UserService
+			.checkLoggedIn()
+			.then(function (user) {
+				if(user === '0') {
+					deferred.reject();
+					$location.url('/login');
+				} else {
+					deferred.resolve(user);
+				}
+            });
+
+		return deferred.promise;
+    }
+
+    function checkAdmin(UserService, $q, $location) {
+        var deferred = $q.defer();
+        UserService
+            .checkAdmin()
+            .then(function (user) {
+                if(user === '0') {
+                    deferred.reject();
+                    $location.url('/');
+                } else {
+                    deferred.resolve(user);
+                }
+            });
+
+        return deferred.promise;
+    }
+
+    function checkCurrentUser(UserService, $q, $location) {
+        var deferred = $q.defer();
+        UserService
+            .checkLoggedIn()
+            .then(function (user) {
+                if(user === '0') {
+                    deferred.resolve({}); //provide an empty object
+                    //$location.url('/login');
+                } else {
+                    deferred.resolve(user);
+                }
+            });
+
+        return deferred.promise;
+    }
+
 })();

@@ -5,8 +5,27 @@ var express = require('express');
 var app = express();
 
 var bodyParser = require('body-parser');
+var passport = require('passport');
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
+
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+app.use(session({
+    //secret: process.env.SESSION_SECRET,
+    secret: "This is the secret",
+    resave: true,
+    saveUninitialized: true
+}));
+
+app.use(cookieParser());
+
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 
 app.set('port', (process.env.PORT || 5000));

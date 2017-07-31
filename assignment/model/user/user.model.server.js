@@ -6,6 +6,7 @@ userModel.createUser = createUser;
 userModel.findUserById = findUserById;
 userModel.findAllUsers = findAllUsers;
 userModel.findUserByUsername = findUserByUsername;
+userModel.findUserByGoogleId = findUserByGoogleId;
 userModel.findUserByCredentials = findUserByCredentials;
 userModel.updateUser = updateUser;
 userModel.deleteUser = deleteUser;
@@ -24,6 +25,12 @@ function addWebsite(userId, websiteId) {
 }
 
 function createUser(user) {
+    if(user.roles) {
+        var roleArray = user.roles.split(",");
+        user.roles = roleArray;
+    } else {
+        user.roles = ['USER'];
+    }
     return userModel.create(user);
 }
 
@@ -39,6 +46,11 @@ function findUserByUsername(username) {
     return userModel.findOne({username: username});
 }
 
+function findUserByGoogleId(googleId) {
+    return userModel
+        .findOne({'google.id': googleId});
+}
+
 function findUserByCredentials(username, password) {
     return userModel.findOne({username: username, password: password});
 }
@@ -46,6 +58,9 @@ function findUserByCredentials(username, password) {
 function updateUser(userId, newUser) {
     delete  newUser.username;
     delete  newUser.password;
+    if(typeof newUser.roles === 'String') {
+        newUser.roles = newUser.roles.split(',');
+    }
     return userModel.update({_id: userId}, {$set: newUser});
 }
 

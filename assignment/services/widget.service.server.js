@@ -56,36 +56,6 @@ module.exports = function(app) {
             var callbackUrl   = "/#!/user/"+userId+"/website/"+websiteId+"/page/"+pageId+"/widget";
             res.redirect(callbackUrl);
         }
-
-
-        // widgetModel
-        //     .findAllWidgetsForPage(pageId)
-        //     .then(function (widgets) {
-        //         if(widgetId) {//for image edit
-        //             for (var w in widgets) {
-        //                 if (parseInt(widgets[w]._id) === parseInt(widgetId)) {
-        //                     widgets[w].url = './uploads/'+filename;
-        //                     break;
-        //                 }
-        //             }
-        //             var callbackUrl   = "/#!/user/"+userId+"/website/"+websiteId+"/page/"+pageId+"/widget";
-        //
-        //             res.redirect(callbackUrl);
-        //         } else {// for create new image
-        //             var newImageId = new Date().getTime() + "";
-        //             var newImage = {
-        //                 _id: newImageId,
-        //                 widgetType: 'IMAGE',
-        //                 pageId: pageId,
-        //                 width: width,
-        //                 url: './uploads/'+filename
-        //             };
-        //             widgets.push(newImage);
-        //             var callbackUrl   = "/#!/user/"+userId+"/website/"+websiteId+"/page/"+pageId+"/widget/"+newImageId;
-        //
-        //             res.redirect(callbackUrl);
-        //         }
-        //     });
     }
 
     function sortWidgets(req, res) {

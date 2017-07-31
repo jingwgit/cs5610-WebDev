@@ -18,12 +18,14 @@
                 vm.error = "Please enter your password";
                 return;
             }
-            //console.log(username, password);
-            UserService.findUserByCredentials(username, password)
+
+            UserService
+                //.findUserByCredentials(username, password)
+                .login(username, password)
                 .then(function (user) {
-                    $location.url("/user/" + user._id);
+                    $location.url("/profile");
                 }, function (error) {
-                    vm.error = "Username " + username + " does not exist.";
+                    vm.error = "Username and password doesn't match!"
                     $timeout(function() {
                         vm.error = null;
                     }, 5000);
@@ -54,35 +56,37 @@
                         username: username,
                         password: password
                     };
-                    UserService.createUser(newUser)
-                        .then(function(user){
-                            $location.url("/user/" + user._id);
-                        },function(error){
-                            console.log(error);
+
+                    return UserService
+                        .register(newUser)
+                        .then(function () {
+                            $location.url("/profile");
                         });
+                    // return UserService.createUser(newUser)
+                    //     .then(function(user){
+                    //         $location.url("/user/" + user._id);
+                    //     },function(error){
+                    //         console.log(error);
+                    //     });
 
                 });
         }
     }
 
-    function ProfileController($routeParams, $location, $timeout, UserService, WebsiteService, PageService, WidgetService) {
+    function ProfileController(currentUser, $routeParams, $location, $timeout, UserService, WebsiteService, PageService, WidgetService) {
         var vm = this;
-        var userId = $routeParams.userId;
+        //var userId = $routeParams.userId;
+        vm.user = currentUser;
+        var userId = currentUser._id;
         vm.updateUser = updateUser;
         vm.deleteUser = deleteUser;
+        vm.logout = logout;
+        vm.unregister = unregister;
         vm.pages = [];
 
         init();
 
         function init() {
-            UserService
-                .findUserById(userId)
-                .then(function (user) {
-                    vm.user = user;
-                }, function (error) {
-                    vm.error = "User not found!";
-                });
-
             WebsiteService
                 .findAllWebsitesForUser(userId)
                 .then(function (websites) {
@@ -91,6 +95,29 @@
                 });
         }
 
+        function logout() {
+            UserService
+                .logout()
+                .then(function () {
+                   $location.url('/login')
+                });
+        }
+
+        function unregister() {
+            UserService
+                .unregister()
+                .then(function () {
+                    $location.url('/l');
+                    WebsiteService
+                        .deleteWebsitesByUser(vm.user._id)
+                        .then(function () {
+                            deleteAllPagesForUser();
+                            deleteAllWidgetsForUser();
+                        });
+                }, function () {
+                    vm.error = "Unable to delete user!"
+                });
+        }
 
         function findAllPagesForUser() {
             var i = 0;
@@ -144,7 +171,7 @@
                             deleteAllWidgetsForUser();
                         });
                 }, function () {
-                    vm.error = "Unable to unregister you!"
+                    vm.error = "Unable to delete user!"
                 });
         }
     }
