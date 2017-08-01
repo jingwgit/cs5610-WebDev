@@ -2,18 +2,20 @@ module.exports = function(app) {
     var userModel = require("../model/user/user.model.server");
     var passport = require('passport');
     var LocalStrategy = require('passport-local').Strategy;
+    var bcrypt = require("bcrypt-nodejs");
+
     passport.use(new LocalStrategy(localStrategy));
     passport.serializeUser(serializeUser);
     passport.deserializeUser(deserializeUser);
 
-    // var googleConfig = {
-    //     clientID : process.env.GOOGLE_CLIENT_ID,
-    //     clientSecret : process.env.GOOGLE_CLIENT_SECRET,
-    //     callbackURL  : process.env.GOOGLE_CALLBACK_URL
-    // };
-    //
-    // var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
-    // passport.use(new GoogleStrategy(googleConfig, googleStrategy));
+    var googleConfig = {
+        clientID : process.env.GOOGLE_CLIENT_ID,
+        clientSecret : process.env.GOOGLE_CLIENT_SECRET,
+        callbackURL  : process.env.GOOGLE_CALLBACK_URL
+    };
+
+    var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+    passport.use(new GoogleStrategy(googleConfig, googleStrategy));
 
     app.post("/api/user", isAdmin, createUser);
     app.get("/api/user", isAdmin, findAllUsers);
@@ -42,12 +44,13 @@ module.exports = function(app) {
 
     function localStrategy(username, password, done) {
         userModel
-            .findUserByCredentials(username, password)
+            .findUserByUsername(username)
             .then(function(user) {
-                    if (!user) {
-                        return done(null, false);
-                    }
+                if(user && bcrypt.compareSync(password, user.password)) {
                     return done(null, user);
+                } else {
+                    return done(null, false);
+                }
                 },
                 function(err) {
                     if (err) { return done(err); }
@@ -65,6 +68,7 @@ module.exports = function(app) {
 
     function register(req, res) {
         var user = req.body;
+        user.password = bcrypt.hashSync(user.password);
         userModel
             .createUser(user)
             .then(function (user) {

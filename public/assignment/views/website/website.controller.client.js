@@ -5,9 +5,10 @@
         .controller("NewWebsiteController", NewWebsiteController)
         .controller("EditWebsiteController", EditWebsiteController);
     
-    function WebsiteListController($routeParams, WebsiteService) {
+    function WebsiteListController(currentUser, WebsiteService) {
         var vm = this;
-        vm.userId = $routeParams.userId;
+        vm.user = currentUser;
+        vm.userId = currentUser._id;
 
         init();
 
@@ -20,9 +21,10 @@
         }
     }
 
-    function NewWebsiteController($routeParams, $location, $timeout, WebsiteService) {
+    function NewWebsiteController(currentUser, $location, $timeout, WebsiteService) {
         var vm = this;
-        vm.userId = $routeParams.userId;
+        vm.user = currentUser;
+        vm.userId = currentUser._id;
         vm.createWebsite = createWebsite;
 
         init();
@@ -72,9 +74,10 @@
             //$location.url("/user/" + vm.userId + "/website");
         }
     }
-    function EditWebsiteController($routeParams, $timeout, $location, WebsiteService, PageService){
+    function EditWebsiteController(currentUser, $routeParams, $timeout, $location, WebsiteService, PageService){
         var vm = this;
-        vm.userId = $routeParams.userId;
+        vm.user = currentUser;
+        vm.userId = currentUser._id;
         vm.websiteId = $routeParams.websiteId;
         vm.editWebsite = editWebsite;
         vm.deleteWebsite = deleteWebsite;
@@ -125,7 +128,7 @@
                     vm.websites = websites;
                 });
 
-            $location.url("/user/"+vm.userId+"/website");
+            $location.url("/website");
         }
 
         function deleteWebsite(){
@@ -134,7 +137,7 @@
                 .then(function () {
                     PageService
                         .deletePagesByWebsite(vm.websiteId);
-                    $location.url("/user/"+vm.userId+"/website");
+                    $location.url("/website");
                 }, function () {
                     vm.error = "Unable to delete website!"
                     $timeout(function(){

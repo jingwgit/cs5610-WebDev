@@ -5,9 +5,10 @@
         .controller("NewPageController", NewPageController)
         .controller("EditPageController", EditPageController);
 
-    function PageListController($routeParams, PageService){
+    function PageListController(currentUser, $routeParams, PageService){
         var vm = this;
-        vm.userId = $routeParams.userId;
+        vm.user = currentUser;
+        vm.userId = currentUser._id;
         vm.websiteId = $routeParams.websiteId;
 
         init();
@@ -21,9 +22,10 @@
         }
     }
 
-    function NewPageController($routeParams, $timeout, PageService){
+    function NewPageController(currentUser, $routeParams, $timeout, PageService){
         var vm = this;
-        vm.userId = $routeParams.userId;
+        vm.user = currentUser;
+        vm.userId = currentUser._id;
         vm.websiteId = $routeParams.websiteId;
         vm.createPage = createPage;
 
@@ -58,7 +60,7 @@
                         vm.message = null;
                     }, 3500);
                 }, function () {
-                    vm.error = "Unable to create page!"
+                    vm.error = "Unable to create page!";
                     $timeout(function(){
                         vm.error = null;
                     }, 3500);
@@ -73,9 +75,10 @@
             vm.pageDescription = null;
         }
     }
-    function EditPageController($routeParams, $location, $timeout, PageService, WidgetService){
+    function EditPageController(currentUser, $routeParams, $location, $timeout, PageService, WidgetService){
         var vm = this;
-        vm.userId = $routeParams.userId;
+        vm.user = currentUser;
+        vm.userId = currentUser._id;
         vm.websiteId = $routeParams.websiteId;
         vm.pageId = $routeParams.pageId;
         vm.editPage = editPage;
@@ -113,7 +116,7 @@
             };
             PageService.updatePage(vm.pageId, editedPage)
                 .then(function () {
-                    $location.url("/user/"+vm.userId+"/website/"+vm.websiteId+"/page");
+                    $location.url("/website/"+vm.websiteId+"/page");
                 });
 
         }
@@ -124,7 +127,7 @@
                 .then(function () {
                     WidgetService
                         .deleteWidgetsByPage(vm.pageId);
-                    $location.url("/user/"+vm.userId+"/website/"+vm.websiteId+"/page");
+                    $location.url("/website/"+vm.websiteId+"/page");
                 }, function () {
                     vm.error = "Unable to delete page!";
                     $timeout(function(){

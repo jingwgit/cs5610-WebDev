@@ -2,13 +2,13 @@
     <div class="container-fluid row">
 
         <div class="navbar-text pull-left">
-            <a href="#!/user/{{model.userId}}/website/{{model.websiteId}}/page" class="wd-text-black wd-icon-padding">
+            <a href="#!/website/{{model.websiteId}}/page" class="wd-text-black wd-icon-padding">
           <span class="glyphicon glyphicon-chevron-left">
           </span>
             </a>
         </div>
         <div class="navbar-text pull-right">
-            <a href="#!/user/{{model.userId}}/website/{{model.websiteId}}/page/{{model.pageId}}/widget/new"
+            <a href="#!/website/{{model.websiteId}}/page/{{model.pageId}}/widget/new"
                class="wd-icon-padding wd-text-black">
           <span class="glyphicon glyphicon-plus">
           </span>
@@ -25,7 +25,7 @@
 
     <div ng-repeat="widget in model.widgets" class="wd-widget">
         <div class="wd-toolbar">
-            <a href="#!/user/{{model.userId}}/website/{{model.websiteId}}/page/{{model.pageId}}/widget/{{widget._id}}">
+            <a href="#!/website/{{model.websiteId}}/page/{{model.pageId}}/widget/{{widget._id}}">
                 <span class="glyphicon glyphicon-cog"></span>
             </a>
             <span class="glyphicon glyphicon-align-justify"></span>
@@ -103,7 +103,7 @@
     <div class="container-fluid row">
         <div class="pull-right navbar-text">
 
-            <a href="#!/user/{{model.userId}}" class="tv-icon-padding">
+            <a href="#!/profile" class="tv-icon-padding">
                 <span class="glyphicon glyphicon-user"></span>
             </a>
 

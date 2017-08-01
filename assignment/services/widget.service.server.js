@@ -38,7 +38,7 @@ module.exports = function(app) {
                 .then(function (widget) {
                     widget.url = './uploads/'+filename;
                     widget.save();
-                    var callbackUrl   = "/#!/user/"+userId+"/website/"+websiteId+"/page/"+pageId+"/widget";
+                    var callbackUrl   = "/#!/website/"+websiteId+"/page/"+pageId+"/widget";
                     res.redirect(callbackUrl);
                 });
         } else {// for create new image
@@ -53,7 +53,7 @@ module.exports = function(app) {
             widgetModel
                 .createWidget(pageId, newImage);
 
-            var callbackUrl   = "/#!/user/"+userId+"/website/"+websiteId+"/page/"+pageId+"/widget";
+            var callbackUrl   = "/#!/website/"+websiteId+"/page/"+pageId+"/widget";
             res.redirect(callbackUrl);
         }
     }

@@ -48,60 +48,93 @@
 				// bound to the variable currentUser. This variable becomes
 				// injectable object and can be added as dependency in any controller.
 			})
-			.when('/user/:userId/website', {
+			.when('/website', {
 				templateUrl : "views/website/website-list.view.client.html",
 				controller: "WebsiteListController",
-				controllerAs: "model"
+				controllerAs: "model",
+                resolve: {
+                    currentUser: checkLoggedIn
+                }
 			})
-			.when('/user/:userId/website/new', {
+			.when('/website/new', {
 				templateUrl : "views/website/website-new.view.client.html",
 				controller: "NewWebsiteController",
-				controllerAs: "model"
+				controllerAs: "model",
+                resolve: {
+                    currentUser: checkLoggedIn
+                }
 			})
-			.when('/user/:userId/website/:websiteId', {
+			.when('/website/:websiteId', {
 				templateUrl : "views/website/website-edit.view.client.html",
 				controller: "EditWebsiteController",
-				controllerAs: "model"
+				controllerAs: "model",
+                resolve: {
+                    currentUser: checkLoggedIn
+                }
 			})
-			.when('/user/:userId/website/:websiteId/page', {
+			.when('/website/:websiteId/page', {
 				templateUrl : "views/page/page-list.view.client.html",
 				controller: "PageListController",
-				controllerAs: "model"
+				controllerAs: "model",
+                resolve: {
+                    currentUser: checkLoggedIn
+                }
 			})
-			.when('/user/:userId/website/:websiteId/page/new', {
+			.when('/website/:websiteId/page/new', {
 				templateUrl : "views/page/page-new.view.client.html",
 				controller: "NewPageController",
-				controllerAs: "model"
+				controllerAs: "model",
+                resolve: {
+                    currentUser: checkLoggedIn
+                }
 			})
-			.when('/user/:userId/website/:websiteId/page/:pageId', {
+			.when('/website/:websiteId/page/:pageId', {
 				templateUrl : "views/page/page-edit.view.client.html",
 				controller: "EditPageController",
-				controllerAs: "model"
+				controllerAs: "model",
+                resolve: {
+                    currentUser: checkLoggedIn
+                }
 			})
-			.when('/user/:userId/website/:websiteId/page/:pageId/widget', {
+			.when('/website/:websiteId/page/:pageId/widget', {
 				templateUrl : "views/widget/widget-list.view.client.html",
 				controller: "WidgetListController",
-				controllerAs: "model"
+				controllerAs: "model",
+                resolve: {
+                    currentUser: checkLoggedIn
+                }
 			})
-			.when('/user/:userId/website/:websiteId/page/:pageId/widget/new', {
+			.when('/website/:websiteId/page/:pageId/widget/new', {
 				templateUrl : "views/widget/widget-chooser.view.client.html",
 				controller: "NewWidgetController",
-				controllerAs: "model"
+				controllerAs: "model",
+                resolve: {
+                    currentUser: checkLoggedIn
+                }
 			})
-            .when('/user/:userId/website/:websiteId/page/:pageId/widget/:widgetId', {
+            .when('/website/:websiteId/page/:pageId/widget/:widgetId', {
                 templateUrl : "views/widget/widget-edit.view.client.html",
                 controller: "EditWidgetController",
-                controllerAs: "model"
+                controllerAs: "model",
+                resolve: {
+                    currentUser: checkLoggedIn
+                }
             })
-            .when('/user/:userId/website/:websiteId/page/:pageId/widget/create/:widgetType', {
+            .when('/website/:websiteId/page/:pageId/widget/create/:widgetType', {
                 templateUrl : "views/widget/widget-new.view.client.html",
                 controller: "CreateWidgetController",
-                controllerAs: "model"
+                controllerAs: "model",
+                resolve: {
+                    currentUser: checkLoggedIn
+                }
             })
-            .when('/user/:userId/website/:websiteId/page/:pageId/widget/:widgetId/search', {
+            .when('/website/:websiteId/page/:pageId/widget/:widgetId/search', {
                 templateUrl : "views/widget/widget-flickr-search.view.client.html",
                 controller: "FlickrImageSearchController",
-                controllerAs: "model"
+                controllerAs: "model",
+                resolve: {
+                    currentUser: checkLoggedIn
+                }
             })
 			.otherwise({
 				redirectTo : "/"

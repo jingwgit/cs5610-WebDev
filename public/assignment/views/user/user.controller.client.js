@@ -10,22 +10,21 @@
         vm.login = login;
 
         function login(username, password) {
-            if (username === undefined || username === null || username === "") {
+            if (!username) {
                 vm.error = "Please enter your username";
                 return;
             }
-            if (password === undefined || password === "" || password === null) {
+            if (!password) {
                 vm.error = "Please enter your password";
                 return;
             }
 
             UserService
-                //.findUserByCredentials(username, password)
                 .login(username, password)
                 .then(function (user) {
                     $location.url("/profile");
                 }, function (error) {
-                    vm.error = "Username and password doesn't match!"
+                    vm.error = "Username and password don't match!";
                     $timeout(function() {
                         vm.error = null;
                     }, 5000);
@@ -38,7 +37,7 @@
         vm.register = register;
 
         function register(username, password, vpassword) {
-            if (username === undefined || username === null || username === "" || password === undefined || password === "") {
+            if (!username || !password) {
                 vm.error = "Username and passwords cannot be empty.";
                 return;
             }
@@ -107,7 +106,7 @@
             UserService
                 .unregister()
                 .then(function () {
-                    $location.url('/l');
+                    $location.url('/');
                     WebsiteService
                         .deleteWebsitesByUser(vm.user._id)
                         .then(function () {

@@ -9,9 +9,10 @@
         .controller("FlickrImageSearchController", FlickrImageSearchController);
 
 
-    function WidgetListController($routeParams, WidgetService, PageService, $sce) {
+    function WidgetListController(currentUser, $routeParams, WidgetService, PageService, $sce) {
         var vm = this;
-        vm.userId = $routeParams.userId;
+        vm.user = currentUser;
+        vm.userId = currentUser.userId;
         vm.websiteId = $routeParams.websiteId;
         vm.pageId = $routeParams.pageId;
         vm.getWidgetUrlForType = getWidgetUrlForType;
@@ -38,6 +39,8 @@
 
         }
 
+
+
         function getWidgetUrlForType(widgetType) {
             return 'views/widget/widget-' + widgetType.toLowerCase() +'.view.client.html';
         }
@@ -57,16 +60,18 @@
 
     }
 
-    function NewWidgetController($routeParams, WidgetService) {
+    function NewWidgetController(currentUser, $routeParams, WidgetService) {
         var vm = this;
-        vm.userId = $routeParams.userId;
+        vm.user = currentUser;
+        vm.userId = currentUser.userId;
         vm.websiteId = $routeParams.websiteId;
         vm.pageId = $routeParams.pageId;
     }
 
-    function CreateWidgetController($routeParams, $location, WidgetService) {
+    function CreateWidgetController(currentUser, $routeParams, $timeout, $location, WidgetService) {
         var vm = this;
-        vm.userId = $routeParams.userId;
+        vm.user = currentUser;
+        vm.userId = currentUser.userId;
         vm.websiteId = $routeParams.websiteId;
         vm.pageId = $routeParams.pageId;
         vm.widgetType = $routeParams.widgetType;
@@ -74,6 +79,14 @@
         vm.error = null;
 
         function createWidget() {
+            if(vm.widgetName === null || vm.widgetName === undefined || vm.widgetName === ""){
+                vm.error = "Widget name cannot be empty";
+                $timeout(function(){
+                    vm.error = null;
+                }, 3500);
+                return;
+            }
+
             if (vm.widgetType === 'IMAGE' || vm.widgetType === 'YOUTUBE') {
                 if (vm.widgetUrl === null || vm.widgetUrl === undefined) {
                     vm.error = "Url is required for Image/Youtube";
@@ -86,6 +99,7 @@
                     return;
                 }
             }
+
 
             var newWidget = {
                 name: vm.widgetName,
@@ -103,16 +117,17 @@
                 .createWidget(vm.pageId, newWidget)
                 .then(function (widget) {
                     vm.message = "Successfully created new widget!";
-                    $location.url("/user/" + vm.userId + "/website/" + vm.websiteId + "/page/" + vm.pageId + "/widget");
+                    $location.url("/website/" + vm.websiteId + "/page/" + vm.pageId + "/widget");
                 }, function (error) {
                     console.log(error);
                 });
         }
     }
 
-    function EditWidgetController($routeParams, $location, WidgetService) {
+    function EditWidgetController(currentUser, $routeParams, $timeout, $location, WidgetService) {
         var vm = this;
-        vm.userId = $routeParams.userId;
+        vm.user = currentUser;
+        vm.userId = currentUser.userId;
         vm.websiteId = $routeParams.websiteId;
         vm.pageId = $routeParams.pageId;
         vm.widgetId = $routeParams.widgetId;
@@ -155,6 +170,14 @@
 
 
         function updateWidget() {
+            if(vm.widgetName === null || vm.widgetName === undefined || vm.widgetName === ""){
+                vm.error = "Widget name cannot be empty";
+                $timeout(function(){
+                    vm.error = null;
+                }, 3500);
+                return;
+            }
+
             var updatedWidget = {
                 name: vm.widgetName,
                 text: vm.widgetText,
@@ -170,7 +193,7 @@
             WidgetService
                 .updateWidget(vm.widgetId, updatedWidget)
                 .then(function () {
-                    $location.url("/user/" + vm.userId + "/website/" + vm.websiteId + "/page/" + vm.pageId + "/widget");
+                    $location.url("/website/" + vm.websiteId + "/page/" + vm.pageId + "/widget");
                 }, function () {
                     vm.error = "Unable to update widget!"
                 });
@@ -180,7 +203,7 @@
             WidgetService
                 .deleteWidgetFromPage(vm.pageId, vm.widgetId)
                 .then(function () {
-                    $location.url("/user/" + vm.userId + "/website/" + vm.websiteId + "/page/" + vm.pageId + "/widget");
+                    $location.url("/website/" + vm.websiteId + "/page/" + vm.pageId + "/widget");
                 }, function () {
                     vm.error = "Unable to delete widget!"
                 });
@@ -188,9 +211,10 @@
 
     }
 
-    function FlickrImageSearchController($routeParams, $location, FlickrService, WidgetService) {
+    function FlickrImageSearchController(currentUser, $routeParams, $location, FlickrService, WidgetService) {
         var vm = this;
-        vm.userId = $routeParams.userId;
+        vm.user = currentUser;
+        vm.userId = currentUser.userId;
         vm.websiteId = $routeParams.websiteId;
         vm.pageId = $routeParams.pageId;
         vm.widgetId = $routeParams.widgetId;
@@ -215,7 +239,7 @@
             WidgetService
                 .updateWidget(vm.widgetId, vm.currentWidget)
                 .then(function () {
-                    $location.url("/user/" + vm.userId + "/website/" + vm.websiteId + "/page/" + vm.pageId + "/widget/");
+                    $location.url("/website/" + vm.websiteId + "/page/" + vm.pageId + "/widget/");
                 });
         }
 
