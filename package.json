@@ -1,21 +1,30 @@
 {
   "name": "cs5610-webdev",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Full Name: Jing Wang E-mail: wang.jing@husky.neu.edu",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jingwgit/cs5610-webdev.git"
   },
   "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jingwgit/cs5610-webdev/issues"
+  },
+  "homepage": "https://github.com/jingwgit/cs5610-webdev#readme",
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.17.2",
     "cookie-parser": "^1.4.3",
-    "express": "^4.15.3",
-    "express-session": "^1.15.4",
+    "express": "^4.15.4",
+    "express-session": "^1.15.5",
     "jquery": "^3.2.1",
-    "mongoose": "^4.11.5",
+    "mongoose": "^4.11.6",
     "multer": "^1.3.0",
     "passport": "^0.3.2",
     "passport-google-oauth": "^1.0.0",
